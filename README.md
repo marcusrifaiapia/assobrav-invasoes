@@ -18,12 +18,21 @@ só manual):
 1. `login_e_download.py` loga no Assobrav e baixa `downloads/<data>/invasao.xlsx`.
 2. `processa_relatorio.py` gera `reports/<data>.xlsx` com os rankings.
 3. `gera_dashboard.py` gera `reports/<data>.html` (dashboard autônomo).
-4. Uma Tarefa Agendada do Windows (`Assobrav_Invasoes_Diario`, todo dia às
+4. `publica_github.py` publica o dashboard em **https://marcusrifaiapia.github.io/assobrav-invasoes/**
+   via GitHub Pages — link público, sem precisar de conta Claude nem GitHub
+   para visualizar (o repositório `docs/` é a fonte da página; commit/push
+   automático a cada execução).
+5. Uma Tarefa Agendada do Windows (`Assobrav_Invasoes_Diario`, todo dia às
    10:00) chama o Claude Code CLI com o prompt em `scripts/prompt_diario.txt`,
-   que roda os 3 scripts acima, publica o dashboard como Artifact e cria um
-   **rascunho** de e-mail no Gmail (nunca envia sozinho) resumindo o dia.
+   que roda os 4 passos acima e cria um **rascunho** de e-mail no Gmail (nunca
+   envia sozinho) resumindo o dia, com o link do dashboard publicado.
 
 Log de cada execução automática fica em `logs/<data>_<hora>.log`.
+
+**Atenção**: o repositório `marcusrifaiapia/assobrav-invasoes` no GitHub é
+**público** (exigência do GitHub Pages gratuito) — os dados de invasão
+(chassis, grupos concorrentes, municípios) ficam publicamente acessíveis por
+link, sem controle de acesso. Decisão consciente, já confirmada.
 
 ## Pendências conhecidas
 
@@ -53,13 +62,17 @@ scripts/
   processa_relatorio.py -> pandas: le o Excel exportado e gera ranking de
                             grupos invasores, modelos, municipios e detalhe
   gera_dashboard.py     -> gera o dashboard HTML autonomo (light/dark)
+  publica_github.py     -> copia o dashboard para docs/ e faz commit+push
+                            (publicacao no GitHub Pages)
   prompt_diario.txt     -> prompt usado pelo Claude Code CLI na execucao diaria
   rodar_diario.ps1      -> wrapper chamado pela Tarefa Agendada do Windows
-downloads/<data>/invasao.xlsx  -> relatorio bruto baixado no dia
-reports/<data>.xlsx            -> Excel consolidado (rankings + detalhe)
-reports/<data>.html            -> dashboard do dia
-logs/<data>_<hora>.log         -> log de cada execucao automatica
-config/.env                    -> credenciais (nao versionar)
+downloads/<data>/invasao.xlsx  -> relatorio bruto baixado no dia (nao versionado)
+reports/<data>.xlsx            -> Excel consolidado (rankings + detalhe, nao versionado)
+reports/<data>.html            -> dashboard do dia (nao versionado)
+docs/index.html                -> copia publica do dashboard mais recente (versionado, publico)
+docs/<data>.html                -> historico de dashboards publicados (versionado, publico)
+logs/<data>_<hora>.log         -> log de cada execucao automatica (nao versionado)
+config/.env                    -> credenciais + token GitHub (nao versionar)
 config/mapa_grupos.json        -> mapa codigo DN -> nome do grupo invasor
 ```
 
