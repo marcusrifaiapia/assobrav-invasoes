@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Invasões VW — Ápia</title>
+<style>
+  .viz-root {
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.10);
+    --blue: #2a78d6; --aqua: #1baf7a; --yellow: #eda100;
+  }
+  @media (prefers-color-scheme: dark) {
+    .viz-root {
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.10);
+      --blue: #3987e5; --aqua: #199e70; --yellow: #c98500;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px; background: var(--page); color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .viz-root { max-width: 980px; margin: 0 auto; }
+  header { margin-bottom: 24px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .subtitulo { color: var(--text-secondary); font-size: 0.9rem; }
+  .cartoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .cartao {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px;
+  }
+  .cartao .rotulo-cartao { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .cartao .valor-cartao { font-size: 1.9rem; font-weight: 600; margin-top: 4px; font-variant-numeric: proportional-nums; }
+  .cartao .valor-cartao.pequeno { font-size: 1.15rem; }
+  section {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  section h2 { font-size: 0.95rem; margin: 0 0 14px; color: var(--text-primary); }
+  .linha-barra { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .rotulo {
+    width: 190px; flex-shrink: 0; font-size: 0.82rem; color: var(--text-secondary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .trilha { flex: 1; background: var(--grid); border-radius: 4px; height: 20px; position: relative; }
+  .preenchimento { background: var(--barra-cor, var(--blue)); height: 100%; border-radius: 4px; }
+  #grupos .preenchimento { background: var(--blue); }
+  #modelos .preenchimento { background: var(--aqua); }
+  #municipios .preenchimento { background: var(--yellow); }
+  .valor {
+    position: absolute; right: -28px; top: 50%; transform: translateY(-50%);
+    font-size: 0.78rem; color: var(--text-secondary); font-variant-numeric: tabular-nums;
+  }
+  table.detalhe { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.detalhe th {
+    text-align: left; padding: 8px 10px; color: var(--text-muted); font-weight: 500;
+    border-bottom: 1px solid var(--grid); white-space: nowrap;
+  }
+  table.detalhe td { padding: 8px 10px; border-bottom: 1px solid var(--grid); color: var(--text-secondary); }
+  table.detalhe td.mono { font-family: ui-monospace, monospace; font-size: 0.76rem; }
+  .vazio { color: var(--text-muted); font-size: 0.85rem; }
+  footer { color: var(--text-muted); font-size: 0.75rem; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <header>
+    <h1>Invasões VW — Grupo Ápia</h1>
+    <div class="subtitulo">Período 01/07/2026 a 10/07/2026 · ADVEs Araraquara, Rio Claro, Araras, Pirassununga</div>
+  </header>
+
+  <div class="cartoes">
+    <div class="cartao">
+      <div class="rotulo-cartao">Total de invasões</div>
+      <div class="valor-cartao">8</div>
+    </div>
+    <div class="cartao">
+      <div class="rotulo-cartao">Grupo que mais invadiu</div>
+      <div class="valor-cartao pequeno">Grupo Discasa</div>
+    </div>
+    <div class="cartao">
+      <div class="rotulo-cartao">Modelo mais vendido por invasores</div>
+      <div class="valor-cartao pequeno">VW/SAVEIRO CS RB MF</div>
+    </div>
+  </div>
+
+  <section id="grupos">
+    <h2>Ranking de grupos invasores</h2>
+    
+        <div class="linha-barra">
+          <div class="rotulo" title="Grupo Discasa">Grupo Discasa</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:100.0%"></div>
+            <span class="valor">2</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="Itacua">Itacua</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:100.0%"></div>
+            <span class="valor">2</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="Grupo Tarraf">Grupo Tarraf</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="DN 868 (grupo nao cadastrado)">DN 868 (grupo nao cadastrado)</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="Germanica">Germanica</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="Carrera Acelera">Carrera Acelera</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+  </section>
+
+  <section id="modelos">
+    <h2>Modelos VW mais vendidos por invasores</h2>
+    
+        <div class="linha-barra">
+          <div class="rotulo" title="VW/SAVEIRO CS RB MF">VW/SAVEIRO CS RB MF</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:100.0%"></div>
+            <span class="valor">2</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="I/VW TIGUAN R LINE">I/VW TIGUAN R LINE</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="I/VW JETTA GLI">I/VW JETTA GLI</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="VW/NIVUS SENSE TSI">VW/NIVUS SENSE TSI</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="VW/POLO SENSE">VW/POLO SENSE</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="VW/POLO TRACK MA">VW/POLO TRACK MA</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="VW/T CROSS SENSE TSI">VW/T CROSS SENSE TSI</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:50.0%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+  </section>
+
+  <section id="municipios">
+    <h2>Municípios mais invadidos</h2>
+    
+        <div class="linha-barra">
+          <div class="rotulo" title="ARARAQUARA/SP">ARARAQUARA/SP</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:100.0%"></div>
+            <span class="valor">3</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="ARARAS/SP">ARARAS/SP</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:66.7%"></div>
+            <span class="valor">2</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="MATAO/SP">MATAO/SP</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:66.7%"></div>
+            <span class="valor">2</span>
+          </div>
+        </div>
+
+        <div class="linha-barra">
+          <div class="rotulo" title="RINCAO/SP">RINCAO/SP</div>
+          <div class="trilha">
+            <div class="preenchimento" style="width:33.3%"></div>
+            <span class="valor">1</span>
+          </div>
+        </div>
+  </section>
+
+  <section>
+    <h2>Detalhe das invasões</h2>
+    
+    <table class="detalhe">
+      <thead>
+        <tr><th>Data</th><th>Grupo</th><th>Modelo</th><th>Chassi</th><th>Município</th><th>Tipo</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>01/07/2026</td>
+          <td>Grupo Tarraf</td>
+          <td>VW/SAVEIRO CS RB MF</td>
+          <td class="mono">9BWKL45U9VP004667</td>
+          <td>MATAO/SP</td>
+          <td>Venda Direta - Frotista</td>
+        </tr>
+        <tr>
+          <td>02/07/2026</td>
+          <td>Germanica</td>
+          <td>VW/T CROSS SENSE TSI</td>
+          <td class="mono">9BWBH6BF0T4131910</td>
+          <td>ARARAS/SP</td>
+          <td>Deficiente Físico</td>
+        </tr>
+        <tr>
+          <td>06/07/2026</td>
+          <td>Grupo Discasa</td>
+          <td>VW/SAVEIRO CS RB MF</td>
+          <td class="mono">9BWKL45U0VP008929</td>
+          <td>ARARAQUARA/SP</td>
+          <td>Venda Direta - Frotista</td>
+        </tr>
+        <tr>
+          <td>08/07/2026</td>
+          <td>Carrera Acelera</td>
+          <td>VW/NIVUS SENSE TSI</td>
+          <td class="mono">9BWCH6CH6VP014936</td>
+          <td>ARARAS/SP</td>
+          <td>Venda Normal</td>
+        </tr>
+        <tr>
+          <td>08/07/2026</td>
+          <td>Itacua</td>
+          <td>I/VW JETTA GLI</td>
+          <td class="mono">3VW2A6BU8TM036557</td>
+          <td>RINCAO/SP</td>
+          <td>Venda Normal</td>
+        </tr>
+        <tr>
+          <td>10/07/2026</td>
+          <td>Itacua</td>
+          <td>VW/POLO SENSE</td>
+          <td class="mono">9BWAH5BZ0TT666127</td>
+          <td>MATAO/SP</td>
+          <td>Venda Normal</td>
+        </tr>
+        <tr>
+          <td>10/07/2026</td>
+          <td>Grupo Discasa</td>
+          <td>I/VW TIGUAN R LINE</td>
+          <td class="mono">3VVUX6RMXTM122647</td>
+          <td>ARARAQUARA/SP</td>
+          <td>Venda Normal</td>
+        </tr>
+        <tr>
+          <td>10/07/2026</td>
+          <td>DN 868 (grupo nao cadastrado)</td>
+          <td>VW/POLO TRACK MA</td>
+          <td class="mono">9BWAG5R17TP059346</td>
+          <td>ARARAQUARA/SP</td>
+          <td>Venda Direta - Frotista</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>Gerado em 11/07/2026 10:01 · Fonte: Assobrav (Área de Cobertura &gt; Invasão, modo Grupo Econômico)</footer>
+</div>
+</body>
+</html>

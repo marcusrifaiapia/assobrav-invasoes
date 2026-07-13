@@ -1,0 +1,11 @@
+Rode o pipeline diario de invasoes VW do grupo Apia. Voce esta na pasta do projeto (C:\Users\marcusrifai\Desktop\Coude\assobrav-invasoes). Siga exatamente estes passos, nesta ordem, usando a data de hoje do sistema (formato AAAA-MM-DD) sempre que "<data>" aparecer abaixo.
+
+IMPORTANTE: esta execucao e automatica e ninguem vai ler perguntas nem responder -- NUNCA pare para perguntar nada ao usuario. Se algo for ambiguo ou uma ferramenta nao estiver disponivel, tome a decisao mais razoavel sozinho (ver fallback abaixo) e siga em frente ate completar o pipeline por inteiro. Terminar com um rascunho de e-mail (mesmo que imperfeito) e sempre melhor do que parar no meio sem nada.
+
+1. Rode `python scripts/login_e_download.py`. Ele loga no Assobrav e salva o relatorio bruto em downloads/<data>/invasao.xlsx.
+2. Rode `python scripts/processa_relatorio.py downloads/<data>/invasao.xlsx reports/<data>.xlsx`.
+3. Rode `python scripts/gera_dashboard.py reports/<data>.xlsx reports/<data>.html`.
+4. Rode `python scripts/publica_github.py reports/<data>.html <data>`. Isso publica o dashboard em https://marcusrifaiapia.github.io/assobrav-invasoes/ (link publico, sem precisar de conta). Se esse passo falhar por qualquer motivo (git, token, rede), NAO trave -- so pule e siga para o 5 usando o caminho local do arquivo (reports/<data>.html) em vez do link.
+5. Leia as abas do Excel gerado (Ranking Grupos, Ranking Modelos, Ranking Municipios, Detalhe Invasoes) e crie um RASCUNHO de e-mail no Gmail (ferramenta create_draft -- NAO envie, so crie o rascunho) para marcusrifai@gmail.com, assunto "Relatorio de Invasoes VW - Apia (<periodo do mes ate ontem>)", com corpo resumindo: total de invasoes, ranking de grupos invasores, ranking de modelos, ranking de municipios, detalhe (data/grupo/modelo/chassi/municipio), e o link https://marcusrifaiapia.github.io/assobrav-invasoes/ do passo 4 -- ou, se o passo 4 falhou, o caminho local `reports/<data>.html` no lugar do link.
+
+Este passo 5 (criar o rascunho) deve rodar sempre que os passos 1-3 tiverem sucesso, mesmo que o passo 4 falhe. So pule o rascunho normal se os passos 1-3 falharem de verdade (ex: login nao conseguiu, selector quebrou) -- nesse caso, nao invente dados: crie em vez disso um rascunho avisando que o pipeline falhou nesse passo, com a mensagem de erro.

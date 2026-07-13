@@ -1,0 +1,9 @@
+{
+  "_comentario": "Mapeia codigo DN (do relatorio de Invasao) para o nome do grupo/concessionaria invasora. Preencha conforme for identificando os codigos -- o relatorio funciona normalmente mesmo com codigos ainda nao mapeados aqui (aparecem como 'DN <codigo> (grupo nao cadastrado)').",
+  "136": "Grupo Discasa",
+  "729": "Grupo Tarraf",
+  "880": "Itacua",
+  "1116": "Germanica",
+  "1458": "Carrera Acelera",
+  "868": "Grupo Belcar"
+}
