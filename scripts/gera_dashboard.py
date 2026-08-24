@@ -6,7 +6,7 @@ Uso:
     python gera_dashboard.py <consolidado.xlsx> <saida.html> [--de DD/MM/AAAA --ate DD/MM/AAAA]
 """
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from html import escape
 from pathlib import Path
 
@@ -199,10 +199,13 @@ def main():
         "detalhe": pd.read_excel(entrada, sheet_name="Detalhe Invasoes"),
     }
 
-    de = rankings["detalhe"]["Data"].min()
-    ate = rankings["detalhe"]["Data"].max()
-    de_str = pd.to_datetime(de).strftime("%d/%m/%Y") if pd.notna(de) else "-"
-    ate_str = pd.to_datetime(ate).strftime("%d/%m/%Y") if pd.notna(ate) else "-"
+    # O periodo do relatorio e sempre "dia 01 do mes ate a data do arquivo"
+    # (o filtro usado na consulta), independente de quais dias tem invasao.
+    # Nao derivar de min/max de "Detalhe Invasoes": um mes sem invasao nos
+    # primeiros dias faria o cabecalho comecar depois do dia 01, incorretamente.
+    data_relatorio = date.fromisoformat(entrada.stem)
+    de_str = data_relatorio.replace(day=1).strftime("%d/%m/%Y")
+    ate_str = data_relatorio.strftime("%d/%m/%Y")
 
     html = gera_html(rankings, de_str, ate_str)
     saida.write_text(html, encoding="utf-8")

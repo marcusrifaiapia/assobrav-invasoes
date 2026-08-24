@@ -7,6 +7,7 @@ Uso:
     python gera_email_html.py <consolidado.xlsx> <saida.html> [--link URL]
 """
 import sys
+from datetime import date
 from html import escape
 from pathlib import Path
 
@@ -182,10 +183,12 @@ def main():
         "ranking_municipios": pd.read_excel(entrada, sheet_name="Ranking Municipios"),
         "detalhe": pd.read_excel(entrada, sheet_name="Detalhe Invasoes"),
     }
-    data_min = rankings["detalhe"]["Data"].min() if not rankings["detalhe"].empty else pd.NaT
-    data_max = rankings["detalhe"]["Data"].max() if not rankings["detalhe"].empty else pd.NaT
-    de = pd.to_datetime(data_min).strftime("%d/%m/%Y") if pd.notna(data_min) else "-"
-    ate = pd.to_datetime(data_max).strftime("%d/%m/%Y") if pd.notna(data_max) else "-"
+    # O periodo e sempre "dia 01 do mes ate a data do arquivo" (o filtro
+    # usado na consulta) -- nao derivar de min/max de "Detalhe Invasoes",
+    # que so reflete os dias com invasao de verdade.
+    data_relatorio = date.fromisoformat(entrada.stem)
+    de = data_relatorio.replace(day=1).strftime("%d/%m/%Y")
+    ate = data_relatorio.strftime("%d/%m/%Y")
 
     html, texto = gera_email(rankings, de, ate, link)
     saida.write_text(html, encoding="utf-8")
