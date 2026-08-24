@@ -8,6 +8,15 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";
 $projeto = "C:\Users\marcusrifai\Desktop\Coude\assobrav-invasoes"
 Set-Location $projeto
 
+# Usa o token de longa duracao (claude setup-token) em vez da sessao OAuth
+# normal, que expira apos um tempo e nao se renova sozinha num processo
+# desatendido -- foi a causa da automacao ter parado silenciosamente antes.
+foreach ($linha in Get-Content "$projeto\config\.env") {
+    if ($linha -match '^CLAUDE_CODE_OAUTH_TOKEN=(.+)$') {
+        $env:CLAUDE_CODE_OAUTH_TOKEN = $matches[1]
+    }
+}
+
 $prompt = Get-Content "$projeto\scripts\prompt_diario.txt" -Raw
 $logDir = "$projeto\logs"
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
