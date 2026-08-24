@@ -12,7 +12,7 @@ Le credenciais de config/.env (nunca hardcoded, nunca no chat).
 """
 import asyncio
 import os
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -40,8 +40,7 @@ MODO_GRUPO_ECONOMICO = "1"
 def periodo_atual() -> tuple[str, str]:
     hoje = date.today()
     primeiro_dia = hoje.replace(day=1)
-    ontem = hoje - timedelta(days=1)
-    return primeiro_dia.strftime("%Y-%m-%d"), ontem.strftime("%Y-%m-%d")
+    return primeiro_dia.strftime("%Y-%m-%d"), hoje.strftime("%Y-%m-%d")
 
 
 async def login(page: Page):
