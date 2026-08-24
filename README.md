@@ -22,12 +22,31 @@ só manual):
    via GitHub Pages — link público, sem precisar de conta Claude nem GitHub
    para visualizar (o repositório `docs/` é a fonte da página; commit/push
    automático a cada execução).
-5. Uma Tarefa Agendada do Windows (`Assobrav_Invasoes_Diario`, todo dia às
+5. `gera_email_html.py` gera o corpo do e-mail (HTML + texto simples).
+6. `cria_rascunho_gmail.py` cria o **rascunho** direto na pasta Rascunhos do
+   Gmail via IMAP + Senha de App (nunca envia sozinho). **Não** usa a
+   ferramenta `create_draft` do Gmail (MCP) — ela não fica disponível na
+   sessão do Claude Code CLI standalone usada pela Tarefa Agendada.
+7. Uma Tarefa Agendada do Windows (`Assobrav_Invasoes_Diario`, todo dia às
    10:00) chama o Claude Code CLI com o prompt em `scripts/prompt_diario.txt`,
-   que roda os 4 passos acima e cria um **rascunho** de e-mail no Gmail (nunca
-   envia sozinho) resumindo o dia, com o link do dashboard publicado.
+   que roda todos os passos acima.
 
 Log de cada execução automática fica em `logs/<data>_<hora>.log`.
+
+### Problemas já resolvidos (histórico, para não repetir o diagnóstico)
+
+- **OAuth do Claude Code CLI expirou** (parou de rodar entre 05/08 e 23/08
+  sem nenhum aviso — os logs só mostravam "OAuth session expired and could
+  not be refreshed"). Corrigido usando `claude setup-token` (token de longa
+  duração, válido por 1 ano, guardado em `CLAUDE_CODE_OAUTH_TOKEN` no
+  `.env` e exportado por `rodar_diario.ps1`). **Quando esse token expirar de
+  novo (~08/2027), repetir**: rodar `claude setup-token` num terminal
+  interativo, copiar o token novo pro `.env`.
+- **Rascunho de e-mail não era criado na execução automática**: a ferramenta
+  `create_draft` do Gmail (MCP) só existe na sessão interativa do app
+  Desktop, não no CLI standalone que a Tarefa Agendada usa. Resolvido com
+  `cria_rascunho_gmail.py` (IMAP + Senha de App do Gmail, ver `GMAIL_APP_PASSWORD`
+  no `.env`).
 
 **Atenção**: o repositório `marcusrifaiapia/assobrav-invasoes` no GitHub é
 **público** (exigência do GitHub Pages gratuito) — os dados de invasão
@@ -63,7 +82,9 @@ scripts/
                             grupos invasores, modelos, municipios e detalhe
   gera_dashboard.py     -> gera o dashboard HTML autonomo (light/dark)
   publica_github.py     -> copia o dashboard para docs/ e faz commit+push
-                            (publicacao no GitHub Pages)
+                            (publicacao no GitHub Pages, com retentativa)
+  gera_email_html.py    -> gera o corpo do e-mail (HTML profissional + texto)
+  cria_rascunho_gmail.py -> cria o rascunho no Gmail via IMAP (Senha de App)
   prompt_diario.txt     -> prompt usado pelo Claude Code CLI na execucao diaria
   rodar_diario.ps1      -> wrapper chamado pela Tarefa Agendada do Windows
 downloads/<data>/invasao.xlsx  -> relatorio bruto baixado no dia (nao versionado)
