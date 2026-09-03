@@ -7,9 +7,12 @@ e mantem so as vendas feitas por outros grupos dentro das nossas ADVEs.
 
 Uso:
     python login_e_download.py
+    python login_e_download.py --de 2026-08-01 --ate 2026-08-31 --pasta agosto_2026
 
+Sem --de/--ate, usa o periodo padrao (dia 01 do mes atual ate hoje).
 Le credenciais de config/.env (nunca hardcoded, nunca no chat).
 """
+import argparse
 import asyncio
 import os
 from datetime import date
@@ -61,8 +64,7 @@ ID_BOTAO_FILTRAR = "#ContentPlaceHolder1_btFiltrar"
 ID_BOTAO_EXPORTAR = "#ctl00_ContentPlaceHolder1_ReportViewer1_ctl09_ctl04_ctl00_ButtonLink"
 
 
-async def baixa_relatorio_invasao(page: Page, saida_dir: Path) -> Path:
-    de, ate = periodo_atual()
+async def baixa_relatorio_invasao(page: Page, saida_dir: Path, de: str, ate: str) -> Path:
     await page.goto(INVASAO_URL)
     await page.wait_for_load_state("networkidle")
 
@@ -98,13 +100,23 @@ async def baixa_relatorio_invasao(page: Page, saida_dir: Path) -> Path:
 
 
 async def main():
-    saida_dir = Path(DOWNLOAD_DIR) / date.today().isoformat()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--de", help="Data inicial AAAA-MM-DD (padrao: dia 01 do mes atual)")
+    parser.add_argument("--ate", help="Data final AAAA-MM-DD (padrao: hoje)")
+    parser.add_argument("--pasta", help="Nome da subpasta em downloads/ (padrao: data de hoje)")
+    args = parser.parse_args()
+
+    de_padrao, ate_padrao = periodo_atual()
+    de = args.de or de_padrao
+    ate = args.ate or ate_padrao
+    pasta = args.pasta or date.today().isoformat()
+    saida_dir = Path(DOWNLOAD_DIR) / pasta
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         page = await browser.new_page(accept_downloads=True)
         await login(page)
-        await baixa_relatorio_invasao(page, saida_dir)
+        await baixa_relatorio_invasao(page, saida_dir, de, ate)
         await browser.close()
 
 
