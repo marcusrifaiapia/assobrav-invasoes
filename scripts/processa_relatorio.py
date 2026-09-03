@@ -51,12 +51,18 @@ def gera_rankings(invasoes: pd.DataFrame, mapa_grupos: dict[int, str]) -> dict[s
     invasoes = invasoes.copy()
     invasoes["Grupo"] = invasoes["DN"].apply(lambda c: nome_grupo(c, mapa_grupos))
 
+    # Consolidado por Grupo -- varios DNs podem pertencer ao mesmo grupo
+    # (ex: Germanica tem mais de 10 DNs cadastrados em mapa_grupos.json) e
+    # devem somar como uma unica linha, nao aparecer espalhados por DN.
     ranking_grupos = (
-        invasoes.groupby(["DN", "Grupo"])
-        .size()
-        .reset_index(name="qtd")
+        invasoes.groupby("Grupo")
+        .agg(
+            qtd=("DN", "size"),
+            DNs=("DN", lambda s: ", ".join(str(v) for v in sorted(s.unique()))),
+        )
+        .reset_index()
         .sort_values("qtd", ascending=False)
-        .reset_index(drop=True)
+        .reset_index(drop=True)[["Grupo", "DNs", "qtd"]]
     )
 
     ranking_modelos = (

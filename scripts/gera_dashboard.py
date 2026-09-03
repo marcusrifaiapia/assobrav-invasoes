@@ -17,18 +17,21 @@ SEQ_AQUA = {"light": "#1baf7a", "dark": "#199e70"}
 SEQ_YELLOW = {"light": "#eda100", "dark": "#c98500"}
 
 
-def barra_horizontal(df: pd.DataFrame, coluna_label: str, cor: dict, id_prefix: str) -> str:
+def barra_horizontal(df: pd.DataFrame, coluna_label: str, cor: dict, id_prefix: str, coluna_dns: str | None = None) -> str:
     if df.empty:
         return '<p class="vazio">Nenhum registro no período.</p>'
     maximo = int(df["qtd"].max())
     linhas = []
     for i, row in df.iterrows():
-        label = escape(str(row[coluna_label]))
+        label_txt = str(row[coluna_label])
+        dns_txt = str(row[coluna_dns]) if coluna_dns else ""
+        titulo = f"{label_txt} (DN {dns_txt})" if dns_txt and "," in dns_txt else label_txt
+        label = escape(label_txt)
         qtd = int(row["qtd"])
         largura_pct = round(100 * qtd / maximo, 1) if maximo else 0
         linhas.append(f"""
         <div class="linha-barra">
-          <div class="rotulo" title="{label}">{label}</div>
+          <div class="rotulo" title="{escape(titulo)}">{label}</div>
           <div class="trilha">
             <div class="preenchimento" style="width:{largura_pct}%"></div>
             <span class="valor">{qtd}</span>
@@ -161,7 +164,7 @@ def gera_html(rankings: dict[str, pd.DataFrame], de: str, ate: str) -> str:
 
   <section id="grupos">
     <h2>Ranking de grupos invasores</h2>
-    {barra_horizontal(rankings["ranking_grupos"], "Grupo", SEQ_BLUE, "grupos")}
+    {barra_horizontal(rankings["ranking_grupos"], "Grupo", SEQ_BLUE, "grupos", "DNs")}
   </section>
 
   <section id="modelos">

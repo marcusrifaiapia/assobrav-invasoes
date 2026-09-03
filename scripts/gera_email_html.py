@@ -24,23 +24,30 @@ ALERTA_BG = "#fff4e5"
 ALERTA_TXT = "#8a5300"
 
 
-def linha_ranking(pos: int, label: str, qtd: int, destaque: bool) -> str:
+def linha_ranking(pos: int, label: str, qtd: int, destaque: bool, subtexto: str | None = None) -> str:
     peso = "font-weight:700;" if destaque else ""
     cor_num = AZUL if destaque else TEXTO_SEC
+    sub_html = (
+        f'<div style="font-size:11px;color:{MUTED};margin-top:2px;">DN {escape(subtexto)}</div>'
+        if subtexto else ""
+    )
     return f"""
     <tr>
-      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{MUTED};font-size:13px;width:28px;">{pos}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{TEXTO};font-size:14px;{peso}">{escape(str(label))}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{cor_num};font-size:14px;text-align:right;{peso}font-variant-numeric:tabular-nums;">{qtd}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{MUTED};font-size:13px;width:28px;vertical-align:top;">{pos}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{TEXTO};font-size:14px;{peso}">{escape(str(label))}{sub_html}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid {BORDA};color:{cor_num};font-size:14px;text-align:right;{peso}font-variant-numeric:tabular-nums;vertical-align:top;">{qtd}</td>
     </tr>"""
 
 
-def tabela_ranking(titulo: str, df: pd.DataFrame, coluna_label: str) -> str:
+def tabela_ranking(titulo: str, df: pd.DataFrame, coluna_label: str, coluna_subtexto: str | None = None) -> str:
     if df.empty:
         linhas = f'<tr><td style="padding:12px;color:{MUTED};font-size:13px;">Nenhum registro.</td></tr>'
     else:
         linhas = "".join(
-            linha_ranking(i + 1, row[coluna_label], int(row["qtd"]), i == 0)
+            linha_ranking(
+                i + 1, row[coluna_label], int(row["qtd"]), i == 0,
+                subtexto=(str(row[coluna_subtexto]) if coluna_subtexto and "," in str(row[coluna_subtexto]) else None),
+            )
             for i, row in df.reset_index(drop=True).iterrows()
         )
     return f"""
@@ -96,7 +103,7 @@ def gera_email(rankings: dict[str, pd.DataFrame], de: str, ate: str, link_dashbo
     ]
     alerta_html = ""
     if not nao_cadastrados.empty:
-        dns = ", ".join(f"DN {int(d)}" for d in nao_cadastrados["DN"])
+        dns = ", ".join(f"DN {d}" for d in nao_cadastrados["DNs"])
         alerta_html = f"""
         <tr><td style="padding:0 24px 20px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:{ALERTA_BG};border-radius:8px;">
@@ -128,7 +135,7 @@ def gera_email(rankings: dict[str, pd.DataFrame], de: str, ate: str, link_dashbo
 
   {alerta_html}
 
-  {tabela_ranking("Ranking de grupos invasores", rankings["ranking_grupos"], "Grupo")}
+  {tabela_ranking("Ranking de grupos invasores", rankings["ranking_grupos"], "Grupo", "DNs")}
   {tabela_ranking("Modelos mais vendidos por invasores", rankings["ranking_modelos"], "Modelo")}
   {tabela_ranking("Municípios mais invadidos", rankings["ranking_municipios"], "Municipio")}
 
@@ -151,7 +158,7 @@ def gera_email(rankings: dict[str, pd.DataFrame], de: str, ate: str, link_dashbo
     linhas_txt = [f"Invasoes VW - Grupo Apia | Periodo {de} a {ate}", "", f"Total de invasoes: {total}", f"Grupo lider: {grupo_top}", f"Modelo mais vendido: {modelo_top}", ""]
     linhas_txt.append("=== Ranking por Grupo ===")
     for i, row in rankings["ranking_grupos"].reset_index(drop=True).iterrows():
-        linhas_txt.append(f"{i + 1}. {row['Grupo']} (DN {row['DN']}) - {row['qtd']}")
+        linhas_txt.append(f"{i + 1}. {row['Grupo']} (DN {row['DNs']}) - {row['qtd']}")
     linhas_txt.append("")
     linhas_txt.append("=== Ranking por Modelo ===")
     for i, row in rankings["ranking_modelos"].reset_index(drop=True).iterrows():
