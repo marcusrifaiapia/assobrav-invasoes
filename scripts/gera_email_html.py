@@ -62,7 +62,7 @@ def tabela_ranking(titulo: str, df: pd.DataFrame, coluna_label: str, coluna_subt
 def tabela_detalhe(df: pd.DataFrame) -> str:
     if df.empty:
         return f'<p style="color:{MUTED};font-size:13px;">Nenhuma invasao no periodo.</p>'
-    cab = ["Data", "Grupo", "Modelo", "Chassi", "Municipio"]
+    cab = ["Data", "Grupo", "Modelo", "Chassi", "Municipio", "Modalidade da Venda"]
     th = "".join(
         f'<th style="text-align:left;padding:8px 10px;font-size:11px;color:{MUTED};text-transform:uppercase;border-bottom:1px solid {BORDA};">{c}</th>'
         for c in cab
@@ -77,6 +77,7 @@ def tabela_detalhe(df: pd.DataFrame) -> str:
           <td style="padding:7px 10px;border-bottom:1px solid {BORDA};font-size:12px;color:{TEXTO_SEC};">{escape(str(row["Modelo"]))}</td>
           <td style="padding:7px 10px;border-bottom:1px solid {BORDA};font-size:11px;color:{MUTED};font-family:ui-monospace,Consolas,monospace;">{escape(str(row["Chassis"]))}</td>
           <td style="padding:7px 10px;border-bottom:1px solid {BORDA};font-size:12px;color:{TEXTO_SEC};">{escape(str(row["Municipio"]))}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid {BORDA};font-size:12px;color:{TEXTO_SEC};">{escape(str(row["Tipo"]))}</td>
         </tr>""")
     return f"""
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
@@ -167,6 +168,17 @@ def gera_email(rankings: dict[str, pd.DataFrame], de: str, ate: str, link_dashbo
     linhas_txt.append("=== Ranking por Municipio ===")
     for i, row in rankings["ranking_municipios"].reset_index(drop=True).iterrows():
         linhas_txt.append(f"{i + 1}. {row['Municipio']} - {row['qtd']}")
+    linhas_txt.append("")
+    linhas_txt.append("=== Detalhe das Invasoes ===")
+    if rankings["detalhe"].empty:
+        linhas_txt.append("Nenhuma invasao no periodo.")
+    else:
+        for _, row in rankings["detalhe"].sort_values("Data").iterrows():
+            data_fmt = pd.to_datetime(row["Data"]).strftime("%d/%m")
+            linhas_txt.append(
+                f"{data_fmt} - {row['Grupo']} - {row['Modelo']} - Chassi {row['Chassis']} - "
+                f"{row['Municipio']} - Modalidade da Venda: {row['Tipo']}"
+            )
     linhas_txt.append("")
     linhas_txt.append(f"Dashboard: {link_dashboard}")
     texto = "\n".join(linhas_txt)

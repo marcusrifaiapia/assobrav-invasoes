@@ -58,7 +58,7 @@ def tabela_detalhe(df: pd.DataFrame) -> str:
     return f"""
     <table class="detalhe">
       <thead>
-        <tr><th>Data</th><th>Grupo</th><th>Modelo</th><th>Chassi</th><th>Município</th><th>Tipo</th></tr>
+        <tr><th>Data</th><th>Grupo</th><th>Modelo</th><th>Chassi</th><th>Município</th><th>Modalidade da Venda</th></tr>
       </thead>
       <tbody>
         {"".join(linhas_html)}
